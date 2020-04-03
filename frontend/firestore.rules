@@ -1,0 +1,36 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+  	match /hospitals/{userId} {
+    	allow read: if true;
+      allow update, delete: if request.auth.uid == userId;
+      allow create: if request.auth.uid == request.resource.data.userId;
+      
+      match /vacancies/{vacancy}/applicants/{userId} {
+      	allow read, update, delete: if request.auth.uid == userId;
+      	allow create: if request.auth.uid == request.resource.id;      
+      }
+      
+      match /vacancies/{vacancy} {
+      	allow read: if true;
+      }
+      
+      match /vacancies/{document=**} {
+      	allow create, read, update, delete: if request.auth.uid == userId;
+      }
+    }
+    
+    match /volunteers/{userId} {
+      allow read, update, delete: if request.auth.uid == userId;
+      allow create: if request.auth.uid == request.resource.id;
+      
+      match /vacancies/{document=**} {
+      	allow create, read, update, delete: if request.auth.uid == userId;
+      }
+    }
+  
+    match /{document=**} {
+      allow read;
+    }
+  }
+}

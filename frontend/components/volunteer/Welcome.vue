@@ -28,7 +28,7 @@
               <!-- Karte 1 -->
               <v-card-text v-if="current === 1">
                 <p class="display-1 text--primary">
-                  Willkommen bei Hospitally!
+                  Willkommen Freiwilliger bei Hospitally!
                 </p>
                 <div class="text--primary">
                   Wir freuen uns, dass Sie einen Teil zur Bekämpfung der
@@ -82,7 +82,7 @@
                         v-model="select"
                         :items="qualifications"
                         :menu-props="{ maxHeight: '400' }"
-                        label="Wählen Sie Ihre Qualificationen aus"
+                        label="Wählen Sie Ihre Qualifikationen aus"
                         multiple
                         hint="Qualification"
                         persistent-hint
@@ -105,7 +105,7 @@
             </v-card>
             <v-row>
               <v-col cols="auto" class="mr-auto">
-                <v-btn text @click="previousStep(n)">Zurück</v-btn>
+                <v-btn @click="previousStep(n)">Zurück</v-btn>
               </v-col>
               <v-col cols="auto">
                 <v-btn
@@ -126,6 +126,7 @@
 </template>
 
 <script>
+import consola from 'consola'
 export default {
   data() {
     return {
@@ -162,13 +163,12 @@ export default {
       if (n === this.steps) {
         // set user data
         const user = this.$store.state.user
+        delete user.uid
         user.name = this.name
         user.phone_number = this.number
         user.adress = this.adress
-        user.qualifications = []
-        for (const i of this.select)
-          user.qualifications.push(this.qualifications[i].text)
-        // user.qualifications = this.select
+        user.qualifications = this.select
+
         // commit changes
         this.$store.commit('setUser', user)
         // update user doc

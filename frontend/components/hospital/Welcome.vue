@@ -28,7 +28,7 @@
               <!-- Karte 1 -->
               <v-card-text v-if="current === 1">
                 <p class="display-1 text--primary">
-                  Willkommen bei Hospitally!
+                  Willkommen Krankenhaus bei Hospitally!
                 </p>
                 <div class="text--primary">
                   Wir freuen uns, dass Sie einen Teil zur Bekämpfung der
