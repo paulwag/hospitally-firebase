@@ -1,0 +1,30 @@
+FROM node:13.10.1-alpine AS builder
+LABEL MAINTAINER="Fabian Pottbäcker"
+# TODO: Use Static Generated Deployment method to serve
+
+WORKDIR /srv/code
+
+# Load dependencies
+COPY package.json package-lock.json ./
+# Install compiler stuff, install dependencies, remove compiler stuff
+RUN apk --no-cache add --virtual native-deps g++ gcc libgcc libstdc++ linux-headers make python && \
+  npm install && \
+  apk del native-deps
+
+# Load code
+COPY . .
+
+# Configure network attachment
+ENV NUXT_HOST 0.0.0.0
+ENV NUXT_PORT 80
+ENV URL 'http://hospitally.de'
+
+RUN npm run build
+
+# Interface documentation
+EXPOSE 80
+
+# Setup execution context
+COPY docker/production/docker-entrypoint.sh /usr/local/bin/
+ENTRYPOINT ["docker-entrypoint.sh"]
+CMD ["npm", "start"]
