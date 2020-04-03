@@ -93,6 +93,20 @@ export default {
             })
         }
       })
+
+    if (!this.$store.state.showWelcome)
+      this.$fireStore
+        .collection('volunteers')
+        .doc(this.$store.state.user.uid)
+        .get()
+        .then((user) => {
+          const userObj = user.data()
+          userObj.uid = this.$store.state.user.uid
+          this.$store.commit('setUser', userObj)
+        })
+
+    if (this.$store.state.user.name === undefined)
+      this.$store.commit('setShowWelcome', true)
   },
   methods: {
     setManipulation(manipulation) {

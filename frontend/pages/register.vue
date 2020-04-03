@@ -123,7 +123,7 @@ export default {
             this.error = ''
           })
           .catch((error) => {
-            consola.error(error)
+            this.error = error
           })
       }
     },

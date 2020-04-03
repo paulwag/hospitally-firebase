@@ -126,7 +126,6 @@
 </template>
 
 <script>
-import consola from 'consola'
 export default {
   data() {
     return {
@@ -163,7 +162,6 @@ export default {
       if (n === this.steps) {
         // set user data
         const user = this.$store.state.user
-        delete user.uid
         user.name = this.name
         user.phone_number = this.number
         user.adress = this.adress
@@ -171,11 +169,15 @@ export default {
 
         // commit changes
         this.$store.commit('setUser', user)
+
         // update user doc
+        const userUpdate = JSON.parse(JSON.stringify(user))
+        delete userUpdate.uid
         this.$fireStore
           .collection('volunteers')
           .doc(user.uid)
           .update(user)
+
         this.$store.commit('setShowWelcome', false)
         this.$emit('processDone')
       } else if (this.current === 2) {

@@ -48,7 +48,7 @@
                       <v-text-field
                         v-model="name"
                         :rules="nameRules"
-                        label="Name*"
+                        label="Straße*"
                         required
                         @input="validate()"
                       ></v-text-field>
@@ -62,31 +62,6 @@
                         required
                         @input="validate()"
                       ></v-text-field>
-                    </v-col>
-                  </v-row>
-
-                  <!-- Qualifikationen -->
-                  <v-row>
-                    <v-col cols="12">
-                      <v-combobox
-                        v-model="select"
-                        :items="items"
-                        label="Qualifikationen"
-                        multiple
-                        chips
-                      >
-                        <template v-slot:selection="data">
-                          <v-chip
-                            :key="JSON.stringify(data.item)"
-                            v-bind="data.attrs"
-                            :input-value="data.selected"
-                            :disabled="data.disabled"
-                            @click:close="data.parent.selectItem(data.item)"
-                          >
-                            {{ data.item }}
-                          </v-chip>
-                        </template>
-                      </v-combobox>
                     </v-col>
                   </v-row>
                 </v-form>
@@ -164,9 +139,20 @@ export default {
         user.name = this.name
         user.number = this.number
         user.qualifications = this.select
+
         // commit changes
         this.$store.commit('setUser', user)
+
         this.$store.commit('setShowWelcome', false)
+
+        // update user doc
+        const userUpdate = JSON.parse(JSON.stringify(user))
+        delete userUpdate.uid
+        this.$fireStore
+          .collection('volunteers')
+          .doc(user.uid)
+          .update(user)
+
         this.$emit('processDone')
       } else if (this.current === 2) {
         this.validate()

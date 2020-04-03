@@ -55,7 +55,6 @@
 </template>
 
 <script>
-import consola from 'consola'
 export default {
   data: () => ({
     valid: true,
@@ -86,6 +85,8 @@ export default {
           .signInWithEmailAndPassword(this.email, this.password)
           .then((response) => {
             this.findRole(response.user.uid)
+            // set show welcome to false by default
+            this.$store.commit('setShowWelcome', false)
             // set login in flag
             this.$store.commit('setLogin', true)
             // navigate to home
@@ -93,7 +94,7 @@ export default {
             this.error = ''
           })
           .catch((error) => {
-            consola.info(error)
+            this.error = error
           })
       }
     },
